@@ -1,9 +1,6 @@
 {:duct.profile/base
  {:duct.core/project-ns clojure-rss-reader
 
-  :handler.feeds/get {}
-  :handler.feeds/post {}
-
   :duct.router/ataraxy
   {:routes {[:get "/v1/feeds"] [:feeds/get]
             [:post "/v1/feeds"] [:feeds/post]}}}
@@ -16,4 +13,9 @@
  :duct.module.web/api
  {}
  :duct.module/sql
+ {}
+ 
+ :clojure-rss-reader.handler.feeds/get
+ {}
+ :clojure-rss-reader.handler.feeds/post
  {}}

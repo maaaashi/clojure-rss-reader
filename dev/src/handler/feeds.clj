@@ -1,12 +1,11 @@
 (ns handler.feeds
-  (:require [integrant.core :as ig]))
+  (:require [integrant.core :as ig]
+            [ring.util.http-response :as res]))
 
-(defmethod ig/init-key :clojure-rss-reader.handler.feeds/get [_ _]
+(defmethod ig/init-key ::get [_ _]
   (fn [_]
-    {:status 200
-     :body "OK"}))
+    (res/ok "OK")))
 
-(defmethod ig/init-key :clojure-rss-reader.handler.feeds/post [_ _]
+(defmethod ig/init-key ::post [_ _]
   (fn [_]
-    {:status 200
-     :body "OK"}))
+    (res/ok "OK")))

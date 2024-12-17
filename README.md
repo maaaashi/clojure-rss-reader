@@ -1,4 +1,4 @@
-# rss-reader
+# clojure-rss-reader
 
 FIXME: description
 

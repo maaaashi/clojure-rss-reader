@@ -14,7 +14,7 @@
 (duct/load-hierarchy)
 
 (defn read-config []
-  (duct/read-config (io/resource "rss_reader/config.edn")))
+  (duct/read-config (io/resource "clojure_rss_reader/config.edn")))
 
 (defn test []
   (eftest/run-tests (eftest/find-tests "test")))

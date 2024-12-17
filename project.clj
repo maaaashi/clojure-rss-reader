@@ -1,4 +1,4 @@
-(defproject rss-reader "0.1.0-SNAPSHOT"
+(defproject clojure-rss-reader "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
@@ -6,9 +6,11 @@
                  [duct/core "0.8.0"]
                  [duct/module.ataraxy "0.3.0"]
                  [duct/module.logging "0.5.0"]
-                 [duct/module.web "0.7.3"]]
+                 [duct/module.sql "0.6.1"]
+                 [duct/module.web "0.7.3"]
+                 [org.postgresql/postgresql "42.2.19"]]
   :plugins [[duct/lein-duct "0.12.3"]]
-  :main ^:skip-aot rss-reader.main
+  :main ^:skip-aot clojure-rss-reader.main
   :resource-paths ["resources" "target/resources"]
   :prep-tasks     ["javac" "compile" ["run" ":duct/compiler"]]
   :middleware     [lein-duct.plugin/middleware]

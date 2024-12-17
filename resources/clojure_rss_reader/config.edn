@@ -1,5 +1,5 @@
 {:duct.profile/base
- {:duct.core/project-ns rss-reader
+ {:duct.core/project-ns clojure-rss-reader
 
   :duct.router/ataraxy
   {:routes {}}}
@@ -10,4 +10,6 @@
 
  :duct.module/logging {}
  :duct.module.web/api
+ {}
+ :duct.module/sql
  {}}

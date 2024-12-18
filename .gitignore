@@ -13,5 +13,6 @@ pom.xml.asc
 /dev/resources/local.edn
 /dev/src/local.clj
 
+.calva
 .clj-kondo
 .lsp

@@ -2,8 +2,7 @@
  {:duct.core/project-ns clojure-rss-reader
 
   :duct.router/ataraxy
-  {:routes {[:get "/v1/feeds"] [:feeds/get]
-            [:post "/v1/feeds"] [:feeds/post]}}}
+  {:routes {}}}
 
  :duct.profile/dev   #duct/include "dev"
  :duct.profile/local #duct/include "local"
@@ -11,11 +10,4 @@
 
  :duct.module/logging {}
  :duct.module.web/api
- {}
- :duct.module/sql
- {}
- 
- :clojure-rss-reader.handler.feeds/get
- {}
- :clojure-rss-reader.handler.feeds/post
  {}}

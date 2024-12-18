@@ -6,10 +6,7 @@
                  [duct/core "0.8.0"]
                  [duct/module.ataraxy "0.3.0"]
                  [duct/module.logging "0.5.0"]
-                 [duct/module.sql "0.6.1"]
-                 [duct/module.web "0.7.3"]
-                 [metosin/ring-http-response "0.9.4"]
-                 [org.postgresql/postgresql "42.2.19"]]
+                 [duct/module.web "0.7.3"]]
   :plugins [[duct/lein-duct "0.12.3"]]
   :main ^:skip-aot clojure-rss-reader.main
   :resource-paths ["resources" "target/resources"]

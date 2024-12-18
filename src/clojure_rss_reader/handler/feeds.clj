@@ -4,4 +4,8 @@
 
 (defmethod ig/init-key ::get [_ _]
   (fn [_]
-    [::response/ok {:message "OK!!!"}]))
+    [::response/ok {:message "OK"}]))
+
+(defmethod ig/init-key ::post [_ _]
+  (fn [_]
+    [::response/ok {:message "OK"}]))

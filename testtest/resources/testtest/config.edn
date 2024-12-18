@@ -1,12 +1,8 @@
 {:duct.profile/base
- {:duct.core/project-ns clojure-rss-reader
+ {:duct.core/project-ns example-api
 
   :duct.router/ataraxy
-  {:routes
-   {[:get "/v1/feeds"] [:clojure-rss-reader.handler.feeds/get]}}
-
-  :clojure-rss-reader.handler.feeds/get
-  {}}
+  {:routes {}}}
 
  :duct.profile/dev   #duct/include "dev"
  :duct.profile/local #duct/include "local"

@@ -3,11 +3,11 @@
 
   :duct.database.sql/hikaricp
   {:adapter "postgresql"
-   :server-name #duct/env "DB_HOST"
-   :port-number #duct/env "DB_PORT"
-   :username #duct/env "DB_USER"
-   :password #duct/env "DB_PASS"
-   :database-name #duct/env "DB_NAME"}
+   :server-name #duct/env ["DB_HOST" :or "localhost"]
+   :port-number #duct/env ["DB_PORT" Int :or 5432]
+   :username #duct/env ["DB_USER" :or "user"]
+   :password #duct/env ["DB_PASS" :or "password"]
+   :database-name #duct/env ["DB_NAME" :or "feed"]}
 
   :duct.router/ataraxy
   {:routes

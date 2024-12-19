@@ -4,12 +4,13 @@
             [next.jdbc :as jdbc]
             [next.jdbc.result-set :as rs]))
 
+(defn get-feeds [db]
+  (let [result (jdbc/execute! db ["SELECT * FROM feed"] {:builder-fn rs/as-unqualified-lower-maps})]
+    {:feeds result}))
 
 (defmethod ig/init-key ::get [_ {{:keys [spec]} :db}]
   (fn [_]
-    (let [result (jdbc/execute! spec ["SELECT * FROM feed"] {:builder-fn rs/as-unqualified-lower-maps})]
-      (println result)
-      [::response/ok {:message "OK"}])))
+    [::response/ok (get-feeds spec)]))
 
 (defmethod ig/init-key ::post [_ _]
   (fn [_]

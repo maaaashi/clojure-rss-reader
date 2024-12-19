@@ -7,12 +7,10 @@
                  [metosin/ring-http-response "0.9.4"]
                  [duct/module.ataraxy "0.3.0"]
                  [duct/module.logging "0.5.0"]
-                 [duct/module.web "0.7.3"]
                  [duct/module.web "0.7.4"]
                  [duct/database.sql.hikaricp "0.4.0"]
                  [org.postgresql/postgresql "42.7.4"]
-                 [com.github.seancorfield/next.jdbc "1.3.981"]
-                 [com.layerware/hugsql "0.5.3"]]
+                 [com.github.seancorfield/next.jdbc "1.3.981"]]
   :plugins [[duct/lein-duct "0.12.3"]]
   :main ^:skip-aot clojure-rss-reader.main
   :resource-paths ["resources" "target/resources"]

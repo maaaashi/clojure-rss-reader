@@ -10,6 +10,7 @@
                  [duct/module.web "0.7.4"]
                  [duct/database.sql.hikaricp "0.4.0"]
                  [org.postgresql/postgresql "42.7.4"]
+                 [com.github.seancorfield/honeysql "2.6.1243"]
                  [com.github.seancorfield/next.jdbc "1.3.981"]]
   :plugins [[duct/lein-duct "0.12.3"]]
   :main ^:skip-aot clojure-rss-reader.main

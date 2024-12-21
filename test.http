@@ -1,0 +1,10 @@
+###
+GET http://localhost:3000/v1/feeds
+
+###
+POST http://localhost:3000/v1/feeds
+Content-Type: application/json
+
+{
+  "url": "https://example.com"
+}

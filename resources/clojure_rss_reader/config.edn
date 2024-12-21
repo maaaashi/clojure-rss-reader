@@ -11,9 +11,13 @@
 
   :duct.router/ataraxy
   {:routes
-   {[:get "/v1/feeds"] [:clojure-rss-reader.handler.feeds/get]}}
+   {[:get "/v1/feeds"] [:clojure-rss-reader.handler.feeds/get]
+    [:post "/v1/feeds"] [:clojure-rss-reader.handler.feeds/post]}}
 
   :clojure-rss-reader.handler.feeds/get
+  {:db #ig/ref :duct.database.sql/hikaricp}
+  
+  :clojure-rss-reader.handler.feeds/post
   {:db #ig/ref :duct.database.sql/hikaricp}}
 
  :duct.profile/dev   #duct/include "dev"

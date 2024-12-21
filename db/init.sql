@@ -4,7 +4,6 @@ create table feed (
   url text not null,
   title text not null,
   description text not null,
-  created_at timestamp not null default current_timestamp
 );
 
 create table article (
@@ -15,7 +14,6 @@ create table article (
   content text not null,
   author text not null,
   published_at timestamp not null,
-  created_at timestamp not null default current_timestamp
 );
 
 

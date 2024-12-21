@@ -28,24 +28,44 @@
       (zip/xml-zip)
       (first)))
 
-(defn extract-feed [zip]
-  (let [content (:content zip)]
-    content))
+(defn extract-content-by-tag [item tag]
+  (-> (filter #(= (:tag %) tag) item)
+      (first)
+      (:content)
+      (first)))
 
-(defn extract-feeds [zip]
-  (let [content (:content zip)]
-    (map extract-feed content))
+(defn extract-feed-item [item]
+  (let [title (extract-content-by-tag item :title)
+        url (extract-content-by-tag item :url)
+        content (extract-content-by-tag item :content)
+        author (-> (extract-content-by-tag item :author)
+                   (first)
+                   (:content)
+                   (first))
+        publicshed (extract-content-by-tag item :published)]
+    {:title title
+     :url url
+     :content content
+     :author author
+     :published publicshed}))
+
+(defn extract-feed [feed]
+  (let [title (extract-content-by-tag feed :title)
+        description (extract-content-by-tag feed :description)
+        entries (->> (filter #(= (:tag %) :entry) feed)
+                    (map #(:content %)))
+        items (map extract-feed-item entries)]
+    {:title title :description description :items items}))
+
+(defn insert-feed-data [db feed-data]
+  ; tood
   )
 
-(comment
-  (let [content (fetch-rss "https://qiita.com/tags/clojure/feed")
-        zip (parse-rss content)
-        feeds (extract-feeds zip) ]
-    feeds))
-
 (defn post-feeds [db {{:keys [url]} :body-params}]
-  (println url)
-  (println (jdbc/execute! db select-all {:builder-fn rs/as-unqualified-lower-maps}))
+  (let [content (fetch-rss url)
+        feed (parse-rss content)
+        feed-data (extract-feed (get feed :content))]
+    (insert-feed-data db feed-data))
   [::response/ok {:message "OK"}])
 
 (defmethod ig/init-key ::post [_ {{:keys [spec]} :db}]

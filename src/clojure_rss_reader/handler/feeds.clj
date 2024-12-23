@@ -8,11 +8,19 @@
             [clojure.zip :as zip]
             [clojure.data.xml :as xml]))
 
-(def select-all (sql/format {:select [:*] :from [:feed]}))
+(def select-feeds (sql/format {:select [:*]
+                               :from [:feed]}))
+
+(defn select-articles [{:keys [id]}]
+  (sql/format {:select [:*]
+               :from [:article]
+               :where [:= :feed_id id]}))
 
 (defn get-feeds [db]
-  (let [result (jdbc/execute! db select-all {:builder-fn rs/as-unqualified-lower-maps})]
-    {:feeds result}))
+  (let [feeds (jdbc/execute! db select-feeds {:builder-fn rs/as-unqualified-lower-maps})
+        feeds-articles (map #(->> (jdbc/execute! db (select-articles %) {:builder-fn rs/as-unqualified-lower-maps})
+                                 (assoc % :articles)) feeds)]
+    {:feeds feeds-articles}))
 
 (defmethod ig/init-key ::get [_ {{:keys [spec]} :db}]
   (fn [_]

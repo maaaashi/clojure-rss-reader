@@ -57,15 +57,33 @@
         items (map extract-feed-item entries)]
     {:title title :description description :items items}))
 
-(defn insert-feed-data [db feed-data]
-  ; tood
-  )
+(defn insert-article [{:keys [feed_id title url content author published]}]
+  (sql/format {:insert-into
+               :article
+               :columns [:feed_id :title :url :content :author :published_at]
+               :values [{:feed_id feed_id :title title :url url :content content :author author :published_at published}]}))
+
+(defn register-articles [db {:keys [feed_id items]}]
+  (doall (map #(jdbc/execute! db (insert-article (assoc % :feed_id feed_id))) items)))
+
+(defn insert-feed [{:keys [url title description]}]
+  (sql/format {:insert-into
+               :feed
+               :columns [:url :title :description]
+               :values [{:url url :title title :description description}]
+               :returning [:id]}))
+
+(defn register-feed [db feed-data]
+  (let [feed-ids (jdbc/execute! db (insert-feed feed-data) {:builder-fn rs/as-unqualified-lower-maps})
+        id (-> feed-ids first :id)]
+    (register-articles db (assoc feed-data :feed_id id))))
 
 (defn post-feeds [db {{:keys [url]} :body-params}]
   (let [content (fetch-rss url)
-        feed (parse-rss content)
-        feed-data (extract-feed (get feed :content))]
-    (insert-feed-data db feed-data))
+        f (parse-rss content)
+        feed (extract-feed (get f :content))
+        data (assoc feed :url url)]
+    (register-feed db data))
   [::response/ok {:message "OK"}])
 
 (defmethod ig/init-key ::post [_ {{:keys [spec]} :db}]

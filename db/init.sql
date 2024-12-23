@@ -3,7 +3,7 @@ create table feed (
   id serial primary key,
   url text not null,
   title text not null,
-  description text not null,
+  description text not null
 );
 
 create table article (
@@ -11,9 +11,9 @@ create table article (
   feed_id integer not null references feed(id),
   title text not null,
   url text not null,
-  content text not null,
-  author text not null,
-  published_at timestamp not null,
+  content text,
+  author text,
+  published_at text
 );
 
 

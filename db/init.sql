@@ -15,9 +15,3 @@ create table article (
   author text,
   published_at text
 );
-
-
--- テストデータ挿入
-insert into feed (url, title, description) values
-('https://www.google.com', 'Google', 'Googleのトップページです。'),
-('https://www.yahoo.co.jp', 'Yahoo! JAPAN', 'Yahoo! JAPANのトップページです。');

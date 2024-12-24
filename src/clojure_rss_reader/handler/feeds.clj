@@ -61,8 +61,8 @@
                :columns [:feed_id :title :url :content :author :published_at]
                :values [{:feed_id feed_id :title title :url url :content content :author author :published_at published}]}))
 
-(defn register-articles [db {:keys [feed_id items]}]
-  (doall (map #(jdbc/execute! db (insert-article (assoc % :feed_id feed_id))) items)))
+(defn register-articles [db {:keys [feed_id articles]}]
+  (doall (map #(jdbc/execute! db (insert-article (assoc % :feed_id feed_id))) articles)))
 
 (defn insert-feed [{:keys [url title description]}]
   (sql/format {:insert-into
@@ -76,17 +76,10 @@
         id (-> feed-ids first :id)]
     (register-articles db (assoc feed-data :feed_id id))))
 
-(let [url "https://qiita.com/tags/clojure/feed"
-      content (fetch-rss url)
-      z (zipper content)
-      feed (extract-feed z)
-      data (assoc feed :url url)]
-  data)
-
 (defn post-feeds [db {{:keys [url]} :body-params}]
   (let [c (fetch-rss url)
         z (zipper c)
-        f (extract-feed (get z :content))
+        f (extract-feed z)
         data (assoc f :url url)]
     (register-feed db data))
   [::response/ok {:message "OK"}])

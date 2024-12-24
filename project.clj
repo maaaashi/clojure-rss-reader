@@ -13,7 +13,8 @@
                  [com.github.seancorfield/honeysql "2.6.1243"]
                  [com.github.seancorfield/next.jdbc "1.3.981"]
                  [clj-http "3.13.0"]
-                 [org.clojure/data.xml "0.0.8"]]
+                 [org.clojure/data.xml "0.0.8"]
+                 [org.clojure/data.zip "1.1.0"]]
   :plugins [[duct/lein-duct "0.12.3"]]
   :main ^:skip-aot clojure-rss-reader.main
   :resource-paths ["resources" "target/resources"]

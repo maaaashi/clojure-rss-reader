@@ -6,7 +6,8 @@
             [honey.sql :as sql]
             [clj-http.client :as http]
             [clojure.zip :as zip]
-            [clojure.data.xml :as xml]))
+            [clojure.data.xml :as xml]
+            [clojure.data.zip.xml :as zx]))
 
 (def select-feeds (sql/format {:select [:*]
                                :from [:feed]}))
@@ -19,7 +20,7 @@
 (defn get-feeds [db]
   (let [feeds (jdbc/execute! db select-feeds {:builder-fn rs/as-unqualified-lower-maps})
         feeds-articles (map #(->> (jdbc/execute! db (select-articles %) {:builder-fn rs/as-unqualified-lower-maps})
-                                 (assoc % :articles)) feeds)]
+                                  (assoc % :articles)) feeds)]
     {:feeds feeds-articles}))
 
 (defmethod ig/init-key ::get [_ {{:keys [spec]} :db}]
@@ -30,40 +31,29 @@
 (defn fetch-rss [url]
   (:body (http/get url {:as :text})))
 
-(defn parse-rss [rss-content]
+(defn zipper [rss-content]
   (-> rss-content
       (xml/parse-str)
-      (zip/xml-zip)
-      (first)))
+      (zip/xml-zip)))
 
-(defn extract-content-by-tag [item tag]
-  (-> (filter #(= (:tag %) tag) item)
-      (first)
-      (:content)
-      (first)))
-
-(defn extract-feed-item [item]
-  (let [title (extract-content-by-tag item :title)
-        url (extract-content-by-tag item :url)
-        content (extract-content-by-tag item :content)
-        author (-> (extract-content-by-tag item :author)
-                   (first)
-                   (:content)
-                   (first))
-        publicshed (extract-content-by-tag item :published)]
+(defn extract-articles [entry]
+  (let [title (zx/xml1-> entry :title zx/text)
+        url (zx/xml1-> entry :url zx/text)
+        content (zx/xml1-> entry :content zx/text)
+        author (zx/xml1-> entry :author zx/text)
+        publicshed (zx/xml1-> entry :published zx/text)]
     {:title title
      :url url
      :content content
      :author author
      :published publicshed}))
 
-(defn extract-feed [feed]
-  (let [title (extract-content-by-tag feed :title)
-        description (extract-content-by-tag feed :description)
-        entries (->> (filter #(= (:tag %) :entry) feed)
-                    (map #(:content %)))
-        items (map extract-feed-item entries)]
-    {:title title :description description :items items}))
+(defn extract-feed [zipper]
+  (let [title (zx/xml1-> zipper :title zx/text)
+        description (zx/xml1-> zipper :description zx/text)
+        entries (zx/xml-> zipper :entry)
+        articles (map extract-articles entries)]
+    {:title title :description description :articles articles}))
 
 (defn insert-article [{:keys [feed_id title url content author published]}]
   (sql/format {:insert-into
@@ -86,11 +76,18 @@
         id (-> feed-ids first :id)]
     (register-articles db (assoc feed-data :feed_id id))))
 
+(let [url "https://qiita.com/tags/clojure/feed"
+      content (fetch-rss url)
+      z (zipper content)
+      feed (extract-feed z)
+      data (assoc feed :url url)]
+  data)
+
 (defn post-feeds [db {{:keys [url]} :body-params}]
-  (let [content (fetch-rss url)
-        f (parse-rss content)
-        feed (extract-feed (get f :content))
-        data (assoc feed :url url)]
+  (let [c (fetch-rss url)
+        z (zipper c)
+        f (extract-feed (get z :content))
+        data (assoc f :url url)]
     (register-feed db data))
   [::response/ok {:message "OK"}])
 
